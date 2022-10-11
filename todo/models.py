@@ -1,8 +1,12 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+User = get_user_model()
 
 
 class Project(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField()
     deadline = models.DateTimeField(blank=True, null=True)
@@ -15,6 +19,7 @@ class Project(models.Model):
 
 
 class Tag(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
 
     def __str__(self):
@@ -22,6 +27,7 @@ class Tag(models.Model):
 
 
 class Task(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField()
     deadline = models.DateTimeField(blank=True, null=True)
