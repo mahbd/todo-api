@@ -6,15 +6,14 @@ and Mobile clients.
 ## Available API
 
 1. User
-    1. Login
-    2. Logout
-    3. Register
-    4. Change Password
-    5. Reset Password
-    6. Token Login
-    7. Token Refresh
-    8. User Details
-    9. User Update
+    1. Login (Get Token) - `POST /api/token/`
+    2. Register - `POST /api/users/`
+    3. Change Password
+    4. Reset Password
+    5. Token Refresh - `POST /api/token/refresh/`
+    6. Token Verify - `POST /api/token/verify/`
+    7. User Details
+    8. User Update
 2. ToDo
     1. Create ToDo
     2. Update ToDo
