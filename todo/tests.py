@@ -83,3 +83,37 @@ class TagTestCase(TestCase):
                          json={'title': 'test2'})
         self.assertEqual(response.status_code, 405, msg=f'Tag must not be updated {response.json()}')
 
+
+class TaskTestCase(TestCase):
+    def setUp(self) -> None:
+        pass
+
+    def test_create_task(self):
+        response = c.post(S_URL + reverse("todo:tasks-list"), {'title': 'test', 'description': 'test'})
+        self.assertEqual(response.status_code, 201, msg=f'Task must be created {response.json()}')
+        task = Task.objects.get(title='test')
+        self.assertEqual(task.description, 'test', msg=f'Task description must be correct: {task.description}')
+
+    def test_update_task(self):
+        c.post(S_URL + reverse("todo:tasks-list"), {'title': 'test', 'description': 'test'})
+        task = Task.objects.get(title='test')
+        response = c.patch(S_URL + reverse("todo:tasks-detail", kwargs={'pk': task.id}),
+                           json={'description': 'test2'})
+        self.assertEqual(response.status_code, 200, msg=f'Task must be updated {response.json()}')
+        task.refresh_from_db()
+        self.assertEqual(task.description, 'test2', msg=f'Task description must be correct: {task.description}')
+
+    def test_delete_task(self):
+        prev_count = Task.objects.count()
+        c.post(S_URL + reverse("todo:tasks-list"), {'title': 'test', 'description': 'test'})
+        task = Task.objects.get(title='test')
+        response = c.delete(S_URL + reverse("todo:tasks-detail", kwargs={'pk': task.id}))
+        self.assertEqual(response.status_code, 204, msg=f'Task must be deleted {response.status_code}')
+        self.assertEqual(Task.objects.count(), prev_count, msg=f'Task must be deleted {response.status_code}')
+
+    def test_put_task(self):
+        c.post(S_URL + reverse("todo:tasks-list"), {'title': 'test', 'description': 'test'})
+        task = Task.objects.get(title='test')
+        response = c.put(S_URL + reverse("todo:tasks-detail", kwargs={'pk': task.id}),
+                         json={'title': 'test2', 'description': 'test2'})
+        self.assertEqual(response.status_code, 405, msg=f'Task must not be updated {response.json()}')
