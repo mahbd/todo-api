@@ -32,7 +32,7 @@ class Task(models.Model):
                                    validators=[MinValueValidator(1), MaxValueValidator(5)])
     tags = models.ManyToManyField(Tag, blank=True)
     reminder_minutes = models.IntegerField(blank=True, null=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
