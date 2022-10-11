@@ -8,7 +8,7 @@ User = get_user_model()
 class Project(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     deadline = models.DateTimeField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -29,7 +29,7 @@ class Tag(models.Model):
 class Task(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     deadline = models.DateTimeField(blank=True, null=True)
     completed = models.BooleanField(default=False)
     next_occurrence = models.DateTimeField(blank=True, null=True)
