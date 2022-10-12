@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.test import TestCase
 from rest_framework.test import RequestsClient
 
-from .models import Project, Tag, Task
+from .models import Project, Tag, Task, Change
 
 User = get_user_model()
 
@@ -189,3 +189,37 @@ class TaskTestCase(TestCase):
         self.assertEqual(response.status_code, 400, msg=f'Task must not be created {response.json()}')
         response = c.post(self.api_url, {'title': 'test', 'priority': -1}, headers=self.header1)
         self.assertEqual(response.status_code, 400, msg=f'Task must not be created {response.json()}')
+
+
+# noinspection DuplicatedCode
+class ChangeTestCase(TestCase):
+    def setUp(self) -> None:
+        self.api_url = S_URL + reverse("todo:changes-list")
+        User.objects.create_user(username='test', password='test')
+        response = c.post(S_URL + reverse("users:token_obtain_pair"), {'username': 'test', 'password': 'test'})
+        self.header1 = {'Authorization': f'Bearer {response.json()["access"]}'}
+        User.objects.create_user(username='test2', password='test2')
+        response = c.post(S_URL + reverse("users:token_obtain_pair"), {'username': 'test2', 'password': 'test2'})
+        self.header2 = {'Authorization': f'Bearer {response.json()["access"]}'}
+
+    def test_create_change(self):
+        response = c.post(self.api_url, {'action': Change.CREATED}, headers=self.header1)
+        self.assertEqual(response.status_code, 405, msg=f'Change can not be created {response.json()}')
+
+    def test_update_change(self):
+        response = c.patch(self.api_url, {'action': Change.UPDATED}, headers=self.header1)
+        self.assertEqual(response.status_code, 405, msg=f'Change can not be updated {response.json()}')
+
+    def test_delete_change(self):
+        response = c.delete(self.api_url, headers=self.header1)
+        self.assertEqual(response.status_code, 405, msg=f'Change can not be deleted {response.json()}')
+
+    def test_get_change(self):
+        Change.objects.create(action=Change.CREATED, owner=User.objects.get(username='test'),
+                              content_type=Change.PROJECT, object_id=1, change_id=1)
+        response = c.get(S_URL + reverse('todo:changes-detail', kwargs={'change_id': 1}), headers=self.header1)
+        self.assertEqual(response.status_code, 200, msg=f'Change must be received {response.json()}')
+        response = c.get(S_URL + reverse('todo:changes-detail', kwargs={'change_id': 1}), headers=self.header2)
+        self.assertEqual(response.status_code, 404, msg=f'Change must not be received {response.json()}')
+        response = c.get(S_URL + reverse('todo:changes-detail', kwargs={'change_id': 2}), headers=self.header1)
+        self.assertEqual(response.status_code, 404, msg=f'Change must not be received {response.json()}')

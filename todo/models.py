@@ -56,3 +56,39 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ChangeManager(models.Manager):
+    def get_last_id(self, user):
+        if not self.filter(owner=user).exists():
+            return 0
+        return self.filter(owner=user).last().change_id
+
+
+class Change(models.Model):
+    CREATED = 'C'
+    UPDATED = 'U'
+    DELETED = 'D'
+    CHANGE_CHOICES = (
+        (CREATED, 'Created'),
+        (UPDATED, 'Updated'),
+        (DELETED, 'Deleted'),
+    )
+    PROJECT = 'P'
+    TASK = 'T'
+    TAG = 'G'
+    MODEL_CHOICES = (
+        (PROJECT, 'Project'),
+        (TASK, 'Task'),
+        (TAG, 'Tag'),
+    )
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    action = models.CharField(max_length=1, choices=CHANGE_CHOICES)
+    change_id = models.IntegerField()
+    content_type = models.CharField(max_length=1, choices=MODEL_CHOICES)
+    object_id = models.IntegerField()
+
+    objects = ChangeManager()
+
+    class Meta:
+        unique_together = ('owner', 'change_id')
