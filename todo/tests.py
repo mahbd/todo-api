@@ -12,7 +12,7 @@ c = RequestsClient()
 S_URL = "http://testserver"
 
 
-# ToDo: Add user based restrictions
+# noinspection DuplicatedCode
 class ProjectTestCase(TestCase):
     def setUp(self) -> None:
         self.api_url = S_URL + reverse("todo:projects-list")
@@ -68,7 +68,12 @@ class ProjectTestCase(TestCase):
                          json={'title': 'test2', 'description': 'test2'}, headers=self.header1)
         self.assertEqual(response.status_code, 405, msg=f'Project must not be updated {response.json()}')
 
+    def test_deadline_before_current_date(self):
+        response = c.post(self.api_url, {'title': 'test', 'deadline': '2020-01-01'}, headers=self.header1)
+        self.assertEqual(response.status_code, 400, msg=f'Task must not be created {response.json()}')
 
+
+# noinspection DuplicatedCode
 class TagTestCase(TestCase):
     def setUp(self) -> None:
         self.api_url = S_URL + reverse("todo:tags-list")
@@ -122,6 +127,7 @@ class TagTestCase(TestCase):
         self.assertEqual(response.status_code, 405, msg=f'Tag must not be updated {response.json()}')
 
 
+# noinspection DuplicatedCode
 class TaskTestCase(TestCase):
     def setUp(self) -> None:
         self.api_url = S_URL + reverse("todo:tasks-list")
@@ -173,3 +179,13 @@ class TaskTestCase(TestCase):
         response = c.put(S_URL + reverse("todo:tasks-detail", kwargs={'pk': task.id}),
                          json={'title': 'test2', 'description': 'test2'}, headers=self.header1)
         self.assertEqual(response.status_code, 405, msg=f'Task must not be updated {response.json()}')
+
+    def test_deadline_before_current_date(self):
+        response = c.post(self.api_url, {'title': 'test', 'deadline': '2020-01-01'}, headers=self.header1)
+        self.assertEqual(response.status_code, 400, msg=f'Task must not be created {response.json()}')
+
+    def test_priority(self):
+        response = c.post(self.api_url, {'title': 'test', 'priority': 6}, headers=self.header1)
+        self.assertEqual(response.status_code, 400, msg=f'Task must not be created {response.json()}')
+        response = c.post(self.api_url, {'title': 'test', 'priority': -1}, headers=self.header1)
+        self.assertEqual(response.status_code, 400, msg=f'Task must not be created {response.json()}')
