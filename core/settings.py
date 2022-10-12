@@ -11,7 +11,7 @@ if os.getenv('DEBUG') == 'False':
     DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://todo-mah.herokuapp.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
