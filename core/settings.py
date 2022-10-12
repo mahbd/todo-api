@@ -9,8 +9,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 if os.getenv('DEBUG') == 'False':
     DEBUG = False
-# ToDO: Add allowed hosts list
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
