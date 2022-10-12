@@ -11,6 +11,7 @@ if os.getenv('DEBUG') == 'False':
     DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
