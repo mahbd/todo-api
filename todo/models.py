@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -10,6 +12,14 @@ User = get_user_model()
 
 def current_date_time_validator(value):
     if value and value < timezone.now():
+        raise ValidationError(
+            _('%(value)s is in the past'),
+            params={'value': value},
+        )
+
+
+def current_date_validator(value):
+    if value and value.date() < timezone.now().date():
         raise ValidationError(
             _('%(value)s is in the past'),
             params={'value': value},
@@ -38,12 +48,14 @@ class Tag(models.Model):
 
 
 class Task(models.Model):
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    deadline = models.DateTimeField(blank=True, null=True, validators=[current_date_time_validator])
+    deadline_date = models.DateTimeField(blank=True, null=True, validators=[current_date_validator])
+    deadline_time = models.TimeField(blank=True, null=True)
     completed = models.BooleanField(default=False)
-    next_occurrence = models.DateTimeField(blank=True, null=True)
+    occurrence_minutes = models.IntegerField(blank=True, null=True)
     last_occurrence = models.DateTimeField(blank=True, null=True)
     priority = models.IntegerField(default=1,
                                    validators=[MinValueValidator(1), MaxValueValidator(5)])

@@ -20,4 +20,4 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'owner', 'id', 'deadline', 'completed')
+    list_display = ('title', 'owner', 'id', 'completed')

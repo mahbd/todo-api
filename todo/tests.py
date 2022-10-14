@@ -181,7 +181,7 @@ class TaskTestCase(TestCase):
         self.assertEqual(response.status_code, 405, msg=f'Task must not be updated {response.json()}')
 
     def test_deadline_before_current_date(self):
-        response = c.post(self.api_url, {'title': 'test', 'deadline': '2020-01-01'}, headers=self.header1)
+        response = c.post(self.api_url, {'title': 'test', 'deadline_date': '2020-01-01'}, headers=self.header1)
         self.assertEqual(response.status_code, 400, msg=f'Task must not be created {response.json()}')
 
     def test_priority(self):
