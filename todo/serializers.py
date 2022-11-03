@@ -8,8 +8,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'owner', 'title', 'description', 'deadline', 'created_at', 'updated_at')
-        extra_kwargs = {'read_only_fields': ('id', 'owner', 'created_at', 'updated_at')}
+        fields = ('owner', 'title', 'description', 'deadline_date', 'deadline_time', 'created_at', 'updated_at')
+        extra_kwargs = {'read_only_fields': ('owner', 'created_at', 'updated_at')}
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -17,8 +17,8 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ('id', 'owner', 'title')
-        extra_kwargs = {'read_only_fields': ('id', 'owner')}
+        fields = ('owner', 'title')
+        extra_kwargs = {'read_only_fields': ('owner',)}
 
 
 class TaskSerializer(serializers.ModelSerializer):

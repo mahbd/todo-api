@@ -10,12 +10,12 @@ class ChangeAdmin(admin.ModelAdmin):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'owner', 'id', 'deadline', 'created_at', 'updated_at')
+    list_display = ('title', 'owner', 'deadline_date', 'deadline_time', 'created_at', 'updated_at')
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('title', 'owner', 'id')
+    list_display = ('title', 'owner')
 
 
 @admin.register(Task)
