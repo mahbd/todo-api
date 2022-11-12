@@ -3,12 +3,22 @@ from datetime import timedelta
 from pathlib import Path
 
 import django_heroku
+from djongo.operations import DatabaseOperations
+from djongo.base import DatabaseWrapper
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 if os.getenv('DEBUG') == 'False':
     DEBUG = False
+
+class PatchedDatabaseOperations(DatabaseOperations):
+
+    def conditional_expression_supported_in_where_clause(self, expression):
+        return False
+
+
+DatabaseWrapper.ops_class = PatchedDatabaseOperations
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://todo-mah.herokuapp.com']
@@ -68,20 +78,7 @@ DATABASES = {
     }
 }
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+AUTH_PASSWORD_VALIDATORS = []
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Dhaka'

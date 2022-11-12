@@ -18,8 +18,8 @@ def current_date_time_validator(value):
         )
 
 
-def current_date_validator(value):
-    if value and value.date() < timezone.now().date():
+def current_date_validator(value: datetime.date):
+    if value and value < timezone.now().date():
         raise ValidationError(
             _('%(value)s is in the past'),
             params={'value': value},
@@ -30,7 +30,7 @@ class Project(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, unique=True, primary_key=True)
     description = models.TextField(blank=True, null=True)
-    deadline_date = models.DateTimeField(blank=True, null=True, validators=[current_date_validator])
+    deadline_date = models.DateField(blank=True, null=True, validators=[current_date_validator])
     deadline_time = models.TimeField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -53,7 +53,7 @@ class Task(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    deadline_date = models.DateTimeField(blank=True, null=True, validators=[current_date_validator])
+    deadline_date = models.DateField(blank=True, null=True, validators=[current_date_validator])
     deadline_time = models.TimeField(blank=True, null=True)
     completed = models.BooleanField(default=False)
     occurrence_minutes = models.IntegerField(blank=True, null=True)
