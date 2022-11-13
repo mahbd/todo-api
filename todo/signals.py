@@ -20,7 +20,7 @@ def project_post_save(sender, instance, created, **kwargs):
             owner=instance.owner,
             action=Change.CREATED,
             content_type=content_type,
-            object_id=instance.id,
+            object_id=str(instance.pk),
             change_id=Change.objects.get_last_id(instance.owner) + 1
         )
     else:
@@ -28,14 +28,13 @@ def project_post_save(sender, instance, created, **kwargs):
             owner=instance.owner,
             action=Change.UPDATED,
             content_type=content_type,
-            object_id=instance.id,
+            object_id=str(instance.pk),
             change_id=Change.objects.get_last_id(instance.owner) + 1
         )
 
 
 @receiver(post_delete)
 def project_post_delete(sender, instance, **kwargs):
-    content_type = None
     if sender == Project:
         content_type = Change.PROJECT
     elif sender == Tag:
@@ -48,6 +47,6 @@ def project_post_delete(sender, instance, **kwargs):
         owner=instance.owner,
         action=Change.DELETED,
         content_type=content_type,
-        object_id=instance.id,
+        object_id=str(instance.pk),
         change_id=Change.objects.get_last_id(instance.owner) + 1
     )

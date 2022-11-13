@@ -28,7 +28,7 @@ def current_date_validator(value: datetime.date):
 
 class Project(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100, unique=True, primary_key=True)
+    title = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
     deadline_date = models.DateField(blank=True, null=True, validators=[current_date_validator])
     deadline_time = models.TimeField(blank=True, null=True)
@@ -42,7 +42,7 @@ class Project(models.Model):
 
 class Tag(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100, unique=True, primary_key=True)
+    title = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.title
@@ -99,7 +99,7 @@ class Change(models.Model):
     action = models.CharField(max_length=1, choices=CHANGE_CHOICES)
     change_id = models.IntegerField()
     content_type = models.CharField(max_length=1, choices=MODEL_CHOICES)
-    object_id = models.IntegerField()
+    object_id = models.CharField(max_length=100)
 
     objects = ChangeManager()
 
