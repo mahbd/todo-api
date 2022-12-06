@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Change, Project, Tag, Task
+from .models import Change, Project, Tag, Task, Shared
 
 
 @admin.register(Change)
@@ -21,3 +21,8 @@ class TagAdmin(admin.ModelAdmin):
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('title', 'owner', 'id', 'completed')
+
+
+@admin.register(Shared)
+class SharedAdmin(admin.ModelAdmin):
+    list_display = ('id', 'owner', 'shared_with', 'content_type', 'object_id')

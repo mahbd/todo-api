@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Project, Tag, Task, Change
+from .models import Project, Tag, Task, Change, Shared
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -57,3 +57,10 @@ class ChangeSerializer(serializers.ModelSerializer):
                 return TagSerializer(Tag.objects.get(id=obj.object_id)).data
             except Tag.DoesNotExist:
                 return {}
+
+
+class SharedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shared
+        fields = ('id', 'owner', 'shared_with', 'content_type', 'object_id')
+        extra_kwargs = {'read_only_fields': ('id', 'owner')}

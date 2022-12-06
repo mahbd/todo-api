@@ -90,10 +90,12 @@ class Change(models.Model):
     PROJECT = 'P'
     TASK = 'T'
     TAG = 'G'
+    SHARED = 'S'
     MODEL_CHOICES = (
         (PROJECT, 'Project'),
         (TASK, 'Task'),
         (TAG, 'Tag'),
+        (SHARED, 'Shared'),
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     action = models.CharField(max_length=1, choices=CHANGE_CHOICES)
@@ -105,3 +107,21 @@ class Change(models.Model):
 
     class Meta:
         unique_together = ('owner', 'change_id')
+
+
+class Shared(models.Model):
+    PROJECT = 'P'
+    TASK = 'T'
+    TAG = 'G'
+
+    SHARED_CHOICES = (
+        (PROJECT, 'Project'),
+        (TAG, 'Tag'),
+        (TASK, 'Task'),
+    )
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='share_owner')
+    shared_with = models.ForeignKey(User, on_delete=models.CASCADE, related_name='share_with')
+    content_type = models.CharField(max_length=1, choices=SHARED_CHOICES)
+    object_id = models.CharField(max_length=100)
+

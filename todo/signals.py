@@ -1,18 +1,19 @@
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
-from .models import Change, Project, Tag, Task
+from .models import Change, Project, Tag, Task, Shared
 
 
 @receiver(post_save)
 def project_post_save(sender, instance, created, **kwargs):
-    content_type = None
     if sender == Project:
         content_type = Change.PROJECT
     elif sender == Tag:
         content_type = Change.TAG
     elif sender == Task:
         content_type = Change.TASK
+    elif sender == Shared:
+        content_type = Change.SHARED
     else:
         return
     if created:
@@ -41,6 +42,8 @@ def project_post_delete(sender, instance, **kwargs):
         content_type = Change.TAG
     elif sender == Task:
         content_type = Change.TASK
+    elif sender == Shared:
+        content_type = Change.SHARED
     else:
         return
     Change.objects.create(
