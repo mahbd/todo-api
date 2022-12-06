@@ -5,4 +5,4 @@ djangorestframework-simplejwt[crypto]
 django-filter
 requests
 daphne
-django-heroku
+Twisted[tls,http2]

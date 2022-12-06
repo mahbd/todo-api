@@ -2,8 +2,6 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-import django_heroku
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
@@ -99,6 +97,3 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
-
-# heroku settings
-django_heroku.settings(locals())
